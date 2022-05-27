@@ -1,0 +1,111 @@
+* {
+    margin: 0%;
+    padding: 0px;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.form {
+    border: 1px solid black;
+    padding: 50px 60px;
+    border-radius: 20px;
+}
+
+.main .form input[type="number"] {
+    margin: 25px 0px;
+    width: 100%;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.main .form input[type="submit"] {
+    float: right;
+    color: #fff;
+    background-color: rgb(25, 118, 210);
+    padding: 10px 20px;
+    border: 0px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.parkingspace {
+    padding: 0px 30px 30px 30px;
+}
+
+.parkingspace h1 {
+    text-align: center;
+    padding: 20px 0px;
+}
+
+.parkingspace h3 {
+    margin: 40px 0px;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 25%;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    background-color: #99c51d;
+    box-shadow: 10px 10px 5px lightblue;
+    color: #fff;
+    font-family: auto;
+    font-size: 20px;
+    font-weight: 700;
+    display: inline-block;
+    margin: 10px;
+}
+
+.cardul {
+    width: 25%;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    background-color: #ff0000;
+    box-shadow: 10px 10px 5px lightblue;
+    color: #fff;
+    font-family: auto;
+    font-size: 20px;
+    font-weight: 700;
+    display: inline-block;
+    margin: 10px;
+}
+
+.tophead {
+    padding: 10px;
+}
+
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+    width: 100%;
+    margin-bottom: 30px !important;
+}
+
+.loderbox {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(0 0 0 / 27%);
+}
+
+.loder {
+    position: absolute;
+    z-index: 99;
+    top: 50%;
+    left: 50%;
+}
+
+.dash {
+    margin-right: 15px !important;
+}
