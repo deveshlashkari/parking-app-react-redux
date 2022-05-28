@@ -1,9 +1,21 @@
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import App from "./App";
+import { Provider } from "react-redux";
+import configureStore from "redux-mock-store";
 
-// should render the whole component
-test("should render the whole component", () => {
-    render(<App />, { wrapper: MemoryRouter });
-    expect(screen.getByTestId("app")).toBeInTheDocument();
+describe("With React Testing Library", () => {
+    const initialState = { output: 10 };
+    const mockStore = configureStore();
+    let store;
+
+    test("renders learn react link", () => {
+        store = mockStore(initialState);
+        render(
+            <Provider store={store}>
+                <App />
+            </Provider>
+        );
+        const heading = screen.getByText(/PARKING SPACE ALLOCATION/i);
+        expect(heading).toBeInTheDocument();
+    });
 });
