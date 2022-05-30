@@ -4,17 +4,26 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import { ToastContainer, toast } from "react-toastify";
 import { CarRegisterProps } from "../store";
+import { Typography } from "@mui/material";
 
 export default function Home() {
     const [space, setSpace] = useState("");
     const state = useSelector((state) => state) as CarRegisterProps;
     let navigate = useNavigate();
 
+    // Return total free spaces
+    const getFreeSpaces = () => {
+        return state.carregister.cardata.length -
+            state.carregister.cardata.filter(
+                (val) => val.available === false
+            ).length;
+    }
+
     const validate = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault();
         if (Number(space) > state.carregister.cardata.length) {
             toast.error(
-                `Toatal parking spaces ${state.carregister.cardata.length}. Please enter the valid space.`
+                `Toatal parking spaces ${getFreeSpaces()}. Please enter the valid space.`
             );
         } else {
             navigate("parkingspace", { state: space });
@@ -44,6 +53,7 @@ export default function Home() {
                             disabled={!space}
                         />
                     </form>
+                    <Typography component="p">Total Space Avaliable - {getFreeSpaces()}</Typography>
                 </div>
             </div>
             <ToastContainer />

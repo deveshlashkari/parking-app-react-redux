@@ -40,6 +40,12 @@
     cursor: not-allowed;
 }
 
+.main .form p {
+    text-align: center;
+    margin-top: 5rem;
+    color: rgb(53, 53, 53);
+}
+
 .parkingspace {
     padding: 0px 30px 30px 30px;
 }
