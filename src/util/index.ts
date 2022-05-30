@@ -1,2 +1,2 @@
-export { calculateAmount } from "./calculateAmount";
+export { calculateAmount } from "./calculate";
 export { makePayment } from "./makePayment";

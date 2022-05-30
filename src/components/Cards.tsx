@@ -19,12 +19,18 @@ export const Card: FC<CardProps> = (
 ) => {
     const isAvailable = car.available;
     return (
-        <Box className={`${isAvailable ? "card" : "cardul"}`} onClick={() => {
-            if (!isAvailable) {
-                setSingleitem(car);
-                handlePaymentModal();
+        <Box
+            className={`${isAvailable ? "card" : "cardul"}`}
+            id={`${isAvailable ?
+                `parking-drawing-space-${car.bookingid}` :
+                `parking-drawing-registered-${car.bookingid}`}`
             }
-        }}>
+            onClick={() => {
+                if (!isAvailable) {
+                    setSingleitem(car);
+                    handlePaymentModal();
+                }
+            }}>
             <Typography variant="h4" gutterBottom>PSB - {car.bookingid}</Typography>
             <Typography variant="body1" component="span">
                 {isAvailable ? " Currently Available." : "Booked"}
@@ -40,12 +46,16 @@ const Cards: FC<CardsProps> = (
         <Box className="cards">
             {cardata.map(
                 (car) => (
-                    <Card
+                    <Box
+                        id={`parking-drawing-space-number-${car.bookingid}`}
                         key={car.bookingid}
-                        car={car}
-                        handlePaymentModal={handlePaymentModal}
-                        setSingleitem={setSingleitem}
-                    />
+                    >
+                        <Card
+                            car={car}
+                            handlePaymentModal={handlePaymentModal}
+                            setSingleitem={setSingleitem}
+                        />
+                    </Box>
                 )
             )}
         </Box>

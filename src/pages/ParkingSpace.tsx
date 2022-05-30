@@ -13,6 +13,7 @@ import Cards from "../components/Cards";
 import DetailsModal from "../components/DetailsModal";
 import { Box, Typography } from "@mui/material";
 import { makePayment, calculateAmount } from "../util";
+import { calculateTime } from "../util/calculate";
 
 
 export default function ParkingSpace() {
@@ -109,15 +110,18 @@ export default function ParkingSpace() {
                                 {state.carregister.cardata.length}
                             </Button>
 
-                            <DetailsModal isOpen={open} onClose={handleClickOpen} />
+                            {open &&
+                                <DetailsModal isOpen={open} onClose={handleClickOpen} />
+                            }
 
-                            <PaymentModal
-                                isOpen={isPaymentModalOpen}
-                                toggleModal={handlePaymentModal}
-                                car={singleitem}
-                                payment={payment}
-                                amount={calculateAmount(singleitem)}
-                            />
+                            {isPaymentModalOpen && (
+                                <PaymentModal
+                                    isOpen={isPaymentModalOpen}
+                                    toggleModal={handlePaymentModal}
+                                    car={singleitem}
+                                    payment={payment}
+                                />
+                            )}
                         </Box>
                         <Cards
                             cardata={state.carregister.cardata}

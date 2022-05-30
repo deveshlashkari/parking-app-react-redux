@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -102,7 +102,7 @@ const DetailsModal: FC<DMProps> = ({ isOpen, onClose, }) => {
             return car.carnumber === carnumber;
         });
 
-        if(isMatch) {
+        if (isMatch) {
             toast.error("Already Registerd.");
             return;
         }
@@ -146,7 +146,7 @@ const DetailsModal: FC<DMProps> = ({ isOpen, onClose, }) => {
             </LocalizationProvider>
             <TextField
                 required
-                id="outlined-required"
+                id="parking-drawing-registration-input"
                 label="Car Number"
                 onChange={(e) =>
                     setCarNumber(e.target.value)
@@ -157,6 +157,7 @@ const DetailsModal: FC<DMProps> = ({ isOpen, onClose, }) => {
             <Button
                 autoFocus
                 onClick={regsubmit}
+                id="parking-drawing-add-car-button"
             >
                 Submit
             </Button>

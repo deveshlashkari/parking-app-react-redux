@@ -1,17 +1,19 @@
 import { FC } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from "@mui/material";
 
 import { SingleCarProps } from "../store/reducers/cartReducer";
+import { calculateTime, calculateAmount } from "../util/calculate";
 
 interface PayProps {
     isOpen: boolean;
     toggleModal: () => void;
     car: SingleCarProps;
-    amount: number;
     payment: () => void;
 }
 
-const PaymentModal: FC<PayProps> = ({ isOpen, toggleModal, car, amount, payment }) => {
+const PaymentModal: FC<PayProps> = (
+    { isOpen, toggleModal, car, payment }
+) => {
 
     return (
         <Dialog open={isOpen} onClose={toggleModal}>
@@ -19,17 +21,20 @@ const PaymentModal: FC<PayProps> = ({ isOpen, toggleModal, car, amount, payment 
             <DialogContent>
                 <DialogContentText>
                     For parking exit please pay below
-                    mention amount for car number <b>{car.carnumber}</b>.
+                    mention amount for car number <b id='deregister-car-registration'>{car.carnumber}</b>.
                 </DialogContentText>
+                <Typography gutterBottom id="deregister-time-spent">
+                    {calculateTime(car)}
+                </Typography>
                 <TextField
-                    id="standard-number"
+                    id="deregister-charge"
                     label="Amount"
                     InputLabelProps={{
                         shrink: true,
                     }}
                     inputProps={{ readOnly: true }}
                     variant="standard"
-                    value={amount + " $"}
+                    value={calculateAmount(car) + " $"}
                 />
             </DialogContent>
             <DialogActions>
@@ -37,13 +42,15 @@ const PaymentModal: FC<PayProps> = ({ isOpen, toggleModal, car, amount, payment 
                     onClick={toggleModal}
                     variant="outlined"
                     color="error"
+                    id="deregister-back-button"
                 >
-                    Cancel
+                    Back
                 </Button>
                 <Button
                     onClick={payment}
                     variant="contained"
                     color="success"
+                    id="deregister-payment-button"
                 >
                     Pay
                 </Button>
