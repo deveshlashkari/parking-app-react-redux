@@ -53,6 +53,8 @@
 .parkingspace h1 {
     text-align: center;
     padding: 20px 0px;
+    font-size: 2.5rem;
+    font-weight: 600;
 }
 
 .parkingspace h3 {
@@ -68,6 +70,13 @@
 
 .cards div {
     transition: all 0.3s ease-in;
+    width: 28%;
+    border-radius: 5px;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 5px 5px 5px #ccc;
+    color: #fff;
+    margin: 10px;
 }
 
 .cards div:hover {
@@ -75,34 +84,12 @@
 }
 
 .card {
-    width: 28%;
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
     background-color: #99c51d;
-    box-shadow: 10px 10px 5px lightblue;
-    color: #fff;
-    font-family: auto;
-    font-size: 20px;
-    font-weight: 700;
-    display: inline-block;
-    margin: 10px;
     cursor: not-allowed;
 }
 
 .cardul {
-    width: 28%;
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
     background-color: #ff0000;
-    box-shadow: 10px 10px 5px lightblue;
-    color: #fff;
-    font-family: auto;
-    font-size: 20px;
-    font-weight: 700;
-    display: inline-block;
-    margin: 10px;
     cursor: pointer;
 }
 
