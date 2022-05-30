@@ -1,24 +1,19 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Header from "../common/Header";
+import Header from "../components/common/Header";
 import { ToastContainer, toast } from "react-toastify";
-import { CarRegisterProps } from "../store";
+import { useDispatch } from "react-redux";
+import { setItems } from "../store/actions/caraction";
 
 export default function Home() {
     const [space, setSpace] = useState("");
-    const state = useSelector((state) => state) as CarRegisterProps;
     let navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const validate = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault();
-        if (Number(space) > state.carregister.cardata.length) {
-            toast.error(
-                `Toatal parking spaces ${state.carregister.cardata.length}. Please enter the valid space.`
-            );
-        } else {
-            navigate("parkingspace", { state: space });
-        }
+        dispatch(setItems(Number(space)));
+        navigate("parkingspace", { state: space });
     };
 
     return (
