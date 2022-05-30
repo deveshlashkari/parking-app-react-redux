@@ -9,9 +9,9 @@ export const MockState = {
     carregister: {
         cardata: [
             {
-                carnumber: "",
+                carnumber: "WB-101",
                 bookingid: "01",
-                available: true,
+                available: false,
                 cartiming: "",
             },
             {
@@ -30,7 +30,7 @@ export const MockState = {
     },
 };
 
-const MocakHome = () => {
+const MockHome = () => {
     const initialState = MockState;
     const mockStore = configureStore();
     let store;
@@ -45,20 +45,20 @@ const MocakHome = () => {
 
 describe("<Home />", () => {
     it("should render the Home Component", () => {
-        render(<MocakHome />, { wrapper: BrowserRouter });
+        render(<MockHome />, { wrapper: BrowserRouter });
         const heading = screen.getByText(/Enter your required space/i);
         expect(heading).toBeInTheDocument();
     });
 
     it("should render the submit button disabled", () => {
-        render(<MocakHome />, { wrapper: BrowserRouter });
+        render(<MockHome />, { wrapper: BrowserRouter });
         const button = screen.getByText(/Submit/i);
         expect(button).toBeInTheDocument();
         expect(button).toBeDisabled();
     });
 
     it("should render the submit button enabled", () => {
-        render(<MocakHome />, { wrapper: BrowserRouter });
+        render(<MockHome />, { wrapper: BrowserRouter });
         const input = screen.getByPlaceholderText(
             /Enter your required parking space/i
         );
@@ -69,7 +69,7 @@ describe("<Home />", () => {
     });
 
     it("should the submit button clickable", () => {
-        render(<MocakHome />, { wrapper: BrowserRouter });
+        render(<MockHome />, { wrapper: BrowserRouter });
         const input = screen.getByPlaceholderText(
             /Enter your required parking space/i
         );
@@ -78,14 +78,16 @@ describe("<Home />", () => {
         fireEvent.click(button);
     });
 
-    it("should render the toast message", () => {
-        // if entered spaces exceed the number of avaliable spaces then, it should show the toast message
-        render(<MocakHome />, { wrapper: BrowserRouter });
+    it("should render the toast message", async () => {
+        // if entered number is less than 1, should displayed the toast message
+        render(<MockHome />, { wrapper: BrowserRouter });
         const input = screen.getByPlaceholderText(
             /Enter your required parking space/i
         );
-        fireEvent.change(input, { target: { value: "10" } });
+        fireEvent.change(input, { target: { value: "0" } });
         const button = screen.getByText(/Submit/i);
         fireEvent.click(button);
+        const toast = await screen.findByText(/Minimum number is /i);
+        expect(toast).toBeInTheDocument();
     });
 });

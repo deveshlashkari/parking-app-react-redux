@@ -14,7 +14,7 @@ interface CardProps {
     handlePaymentModal: () => void;
 }
 
-const Card: FC<CardProps> = (
+export const Card: FC<CardProps> = (
     { car, setSingleitem, handlePaymentModal }
 ) => {
     const isAvailable = car.available;
