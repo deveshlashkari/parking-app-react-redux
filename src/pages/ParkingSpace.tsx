@@ -12,6 +12,7 @@ import PaymentModal from "../components/PaymentModal";
 import Cards from "../components/Cards";
 import DetailsModal from "../components/DetailsModal";
 import { Box, Typography } from "@mui/material";
+import { makePayment, calculateAmount } from "../util";
 
 
 export default function ParkingSpace() {
@@ -46,50 +47,17 @@ export default function ParkingSpace() {
     // handle payment
     const payment = async () => {
         setLoder(true);
-        let data = {
-            "car-registration": singleitem.carnumber,
-            charge: getAmount(),
-        };
 
-        try {
-            const res = await fetch("https://httpstat.us/200", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (res.status === 200) {
-                dispatch(removeItems(singleitem));
-                toast.success("Payment Successful");
-            } else {
-                throw new Error("Payment Failed");
-            }
-        } catch (err: any) {
-            toast.error(err.message);
-        } finally {
-            setLoder(false);
-            handlePaymentModal();
+        const res = await makePayment(singleitem);
+        if (res) {
+            dispatch(removeItems(singleitem));
+            toast.success("Payment Successful");
+        } else {
+            toast.error("Payment Failed");
         }
-    };
 
-    // return the total amount based on total hours
-    const getAmount = () => {
-        const date1 = new Date(singleitem!.cartiming);
-        const date2 = new Date();
-
-        var diff = date2.getTime() - date1.getTime();
-
-        var msec = diff;
-        var hh = Math.floor(msec / 1000 / 60 / 60);
-        msec -= hh * 1000 * 60 * 60;
-        var mm = Math.floor(msec / 1000 / 60);
-        msec -= mm * 1000 * 60;
-        if (hh >= 2 && mm !== 0) {
-            return 20 + ((hh - 2) * 10);
-        }
-        return 10;
+        setLoder(false);
+        handlePaymentModal();
     };
 
     // Check if user enters parking space or not
@@ -105,7 +73,7 @@ export default function ParkingSpace() {
             {loder ? (
                 <Box className="loderbox">
                     <Box className="loder">
-                        <CircularProgress />
+                        <CircularProgress data-testid="loader" />
                     </Box>
                 </Box>
             ) : (
@@ -148,7 +116,7 @@ export default function ParkingSpace() {
                                 toggleModal={handlePaymentModal}
                                 car={singleitem}
                                 payment={payment}
-                                amount={getAmount()}
+                                amount={calculateAmount(singleitem)}
                             />
                         </Box>
                         <Cards
