@@ -1,5 +1,9 @@
-import { AddItemsAction, RemoveItemsAction } from "../actions/caraction";
-import { ADD, REMOVE } from "../constants/constants";
+import {
+    AddItemsAction,
+    RemoveItemsAction,
+    SetItemsAction,
+} from "../actions/caraction";
+import { ADD, REMOVE, SET } from "../constants/constants";
 
 export interface SingleCarProps {
     carnumber: string;
@@ -12,32 +16,43 @@ export interface CarProps {
     cardata: SingleCarProps[];
 }
 
-const initialState: CarProps = {
-    cardata: [
-        { carnumber: "", bookingid: "01", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "02", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "03", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "04", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "05", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "06", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "07", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "08", available: true, cartiming: "" },
-        { carnumber: "", bookingid: "09", available: true, cartiming: "" },
-    ],
+const getCarData = (TOTAL_SPACES: number): CarProps["cardata"] => {
+    const cardata: CarProps["cardata"] = Array(TOTAL_SPACES)
+        .fill(0)
+        .map((_, index) =>
+            Object({
+                carnumber: "",
+                bookingid: index,
+                available: true,
+                cartiming: "",
+            })
+        );
+    return cardata;
 };
 
-type Action = AddItemsAction | RemoveItemsAction;
+const initialState: CarProps = {
+    cardata: getCarData(0),
+};
+
+type Action = AddItemsAction | RemoveItemsAction | SetItemsAction;
 
 const RegistrationReducer = (state = initialState, action: Action) => {
     switch (action.type) {
+        case SET:
+            return {
+                ...state,
+                cardata: getCarData(action.payload as number),
+            };
         case ADD:
             return {
                 ...state,
                 cardata: state.cardata.map((val) => {
-                    if (val.bookingid === action.payload.bookingid) {
-                        return action.payload;
-                    } else {
-                        return val;
+                    if (typeof action.payload !== "number") {
+                        if (val.bookingid === action.payload.bookingid) {
+                            return action.payload;
+                        } else {
+                            return val;
+                        }
                     }
                 }),
             };
@@ -45,13 +60,15 @@ const RegistrationReducer = (state = initialState, action: Action) => {
             return {
                 ...state,
                 cardata: state.cardata.map((val) => {
-                    if (val.bookingid === action.payload.bookingid) {
-                        return {
-                            carnumber: "",
-                            bookingid: action.payload.bookingid,
-                            available: true,
-                            cartiming: "",
-                        };
+                    if (typeof action.payload !== "number") {
+                        if (val.bookingid === action.payload.bookingid) {
+                            return {
+                                carnumber: "",
+                                bookingid: action.payload.bookingid,
+                                available: true,
+                                cartiming: "",
+                            };
+                        }
                     } else {
                         return val;
                     }
