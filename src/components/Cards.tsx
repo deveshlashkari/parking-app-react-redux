@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 import { CarProps, SingleCarProps } from "../store/reducers/cartReducer";
 
@@ -18,35 +19,37 @@ const Card: FC<CardProps> = (
 ) => {
     const isAvailable = car.available;
     return (
-        <div className={`${isAvailable ? "card" : "cardul"}`} onClick={() => {
+        <Box className={`${isAvailable ? "card" : "cardul"}`} onClick={() => {
             if (!isAvailable) {
                 setSingleitem(car);
                 handlePaymentModal();
             }
         }}>
-            <h3>PSB - {car.bookingid}</h3>
-            <span>
+            <Typography variant="h4" gutterBottom>PSB - {car.bookingid}</Typography>
+            <Typography variant="body1" component="span">
                 {isAvailable ? " Currently Available." : "Booked"}
-            </span>
-        </div>
+            </Typography>
+        </Box>
     );
 }
 
 const Cards: FC<CardsProps> = (
     { cardata, setSingleitem, handlePaymentModal }
 ) => {
-    return <div className="cards">
-        {cardata.map(
-            (car) => (
-                <Card
-                    key={car.bookingid}
-                    car={car}
-                    handlePaymentModal={handlePaymentModal}
-                    setSingleitem={setSingleitem}
-                />
-            )
-        )}
-    </div>
+    return (
+        <Box className="cards">
+            {cardata.map(
+                (car) => (
+                    <Card
+                        key={car.bookingid}
+                        car={car}
+                        handlePaymentModal={handlePaymentModal}
+                        setSingleitem={setSingleitem}
+                    />
+                )
+            )}
+        </Box>
+    )
 }
 
 export default Cards;
