@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import Header from "../common/Header";
+import Header from "../components/common/Header";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Header from "../common/Header";
+import Header from "../components/common/Header";
 import { ToastContainer, toast } from "react-toastify";
 import { CarRegisterProps } from "../store";
 

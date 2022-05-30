@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/pages/Home";
-import ParkingSpace from "./components/pages/ParkingSpace";
+import Home from "./pages/Home";
+import ParkingSpace from "./pages/ParkingSpace";
 
 function App() {
   return (
