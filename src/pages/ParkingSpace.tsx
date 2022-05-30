@@ -65,7 +65,7 @@ export default function ParkingSpace() {
     const navigate = useNavigate();
     const [newreg, setnewreg] = useState(true);
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(new Date());
+    const [time, setTime] = useState(new Date());
     const state = useSelector((state) => state) as CarRegisterProps;
     const dispatch = useDispatch();
     const [carnumber, setCarNumber] = useState("");
@@ -81,6 +81,23 @@ export default function ParkingSpace() {
         setnewreg(!newreg);
         setOpen(true);
     };
+
+    // Return total free spaces
+    const getFreeSpaces = () => {
+        return state.carregister.cardata.length -
+            state.carregister.cardata.filter(
+                (val) => val.available === false
+            ).length;
+    }
+
+    const getRandomId = () => Math.floor(Math.random() * getFreeSpaces());
+
+    const getFreeSpaceId = () => {
+        const freeSpace = state.carregister.cardata.filter(
+            (val) => val.available === true
+        );
+        return freeSpace[getRandomId()].bookingid;
+    }
 
     const regsubmit = () => {
         if (carnumber !== "") {
@@ -108,18 +125,13 @@ export default function ParkingSpace() {
                 }
             }
             if (matches === false) {
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].available === true) {
-                        let info = {
-                            carnumber: carnumber,
-                            bookingid: items[i].bookingid as string,
-                            available: false,
-                            cartiming: value,
-                        };
-                        dispatch(addItems(info));
-                        break;
-                    }
-                }
+                let carDetails = {
+                    carnumber: carnumber,
+                    bookingid: getFreeSpaceId(),
+                    available: false,
+                    cartiming: time,
+                };
+                dispatch(addItems(carDetails));
                 toast.success("Successfuly Registerd.");
             } else {
                 toast.error("Already Registerd.");
@@ -207,11 +219,7 @@ export default function ParkingSpace() {
                                 variant="contained"
                                 color="success"
                             >
-                                Total Available Spaces :{" "}
-                                {state.carregister.cardata.length -
-                                    state.carregister.cardata.filter(
-                                        (val) => val.available === false
-                                    ).length}
+                                Total Available Spaces : {getFreeSpaces()}
                             </Button>
 
                             <Button
@@ -242,9 +250,9 @@ export default function ParkingSpace() {
                                                 <TextField {...props} />
                                             )}
                                             label="Car Arrival Time"
-                                            value={value}
+                                            value={time}
                                             onChange={(newValue) => {
-                                                setValue(newValue as Date);
+                                                setTime(newValue as Date);
                                             }}
                                         />
                                     </LocalizationProvider>
