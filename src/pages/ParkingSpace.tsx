@@ -76,15 +76,20 @@ export default function ParkingSpace() {
 
     // return the total amount based on total hours
     const getAmount = () => {
-        const date1 = new Date(singleitem!.cartiming).valueOf();
-        const date2 = new Date().valueOf();
-        const diffTime: number = Math.abs(date2 - date1);
-        const diffHrs = Math.ceil(diffTime / (1000 * 60 * 60));
-        if (!isNaN(diffHrs)) {
-            return 10;
-        } else {
-            return diffHrs * 10;
+        const date1 = new Date(singleitem!.cartiming);
+        const date2 = new Date();
+
+        var diff = date2.getTime() - date1.getTime();
+
+        var msec = diff;
+        var hh = Math.floor(msec / 1000 / 60 / 60);
+        msec -= hh * 1000 * 60 * 60;
+        var mm = Math.floor(msec / 1000 / 60);
+        msec -= mm * 1000 * 60;
+        if (hh >= 2 && mm !== 0) {
+            return 20 + ((hh - 2) * 10);
         }
+        return 10;
     };
 
     // Check if user enters parking space or not
