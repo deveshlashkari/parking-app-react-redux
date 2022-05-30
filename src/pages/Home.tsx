@@ -11,13 +11,14 @@ export default function Home() {
     let navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // validate user input 
     const validate = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault();
         if (Number(space) < 1) {
             toast.error("Minimum number is 1");
             return;
         }
-        
+
         dispatch(setItems(Number(space)));
         navigate("parkingspace", { state: space });
     };

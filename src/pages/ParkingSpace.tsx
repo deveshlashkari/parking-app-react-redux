@@ -25,10 +25,12 @@ export default function ParkingSpace() {
     );
     const [loder, setLoder] = useState(false);
 
+    // toggle car registration modal
     const handleClickOpen = () => {
         setOpen(prev => !prev);
     };
 
+    // toggle payment modal
     const handlePaymentModal = () => {
         setPaymentModalOpen(prev => !prev);
     }
@@ -41,6 +43,7 @@ export default function ParkingSpace() {
             ).length;
     }
 
+    // handle payment
     const payment = async () => {
         setLoder(true);
         let data = {
@@ -71,6 +74,7 @@ export default function ParkingSpace() {
         }
     };
 
+    // return the total amount based on total hours
     const getAmount = () => {
         const date1 = new Date(singleitem!.cartiming).valueOf();
         const date2 = new Date().valueOf();
