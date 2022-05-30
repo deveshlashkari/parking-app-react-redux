@@ -66,6 +66,14 @@
     gap: 2rem;
 }
 
+.cards div {
+    transition: all 0.3s ease-in;
+}
+
+.cards div:hover {
+    transform: scale(1.04);
+}
+
 .card {
     width: 28%;
     border-radius: 5px;
@@ -79,10 +87,11 @@
     font-weight: 700;
     display: inline-block;
     margin: 10px;
+    cursor: not-allowed;
 }
 
 .cardul {
-    width: 25%;
+    width: 28%;
     border-radius: 5px;
     padding: 20px;
     text-align: center;
@@ -94,6 +103,7 @@
     font-weight: 700;
     display: inline-block;
     margin: 10px;
+    cursor: pointer;
 }
 
 .tophead {

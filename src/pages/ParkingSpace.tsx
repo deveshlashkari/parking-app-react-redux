@@ -20,6 +20,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { CarRegisterProps } from "../store";
 import { SingleCarProps } from "../store/reducers/cartReducer";
 import { useLocation, useNavigate } from "react-router-dom";
+import PaymentModal from "../components/PaymentModal";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -61,7 +62,6 @@ const BootstrapDialogTitle: FC<BDTProps> = (props) => {
 };
 
 export default function ParkingSpace() {
-    const location = useLocation();
     const navigate = useNavigate();
     const [newreg, setnewreg] = useState(true);
     const [open, setOpen] = useState(false);
@@ -69,18 +69,20 @@ export default function ParkingSpace() {
     const state = useSelector((state) => state) as CarRegisterProps;
     const dispatch = useDispatch();
     const [carnumber, setCarNumber] = useState("");
-    const [exit, setExit] = useState(false);
+    const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
     const [singleitem, setSingleitem] = useState<SingleCarProps>(
         { carnumber: "", bookingid: "01", available: true, cartiming: "" }
     );
-    const [amount, setAmount] = useState<string | number>("");
     const [loder, setLoder] = useState(false);
-    const spaces = location.state as number;
 
     const handleClickOpen = () => {
         setnewreg(!newreg);
         setOpen(true);
     };
+
+    const handlePaymentModal = () => {
+        setPaymentModalOpen(!isPaymentModalOpen);
+    }
 
     // Return total free spaces
     const getFreeSpaces = () => {
@@ -139,33 +141,29 @@ export default function ParkingSpace() {
         }
     };
 
-    const payment = () => {
+    const payment = async () => {
         setLoder(true);
         let data = {
-            "car-registration": singleitem!.carnumber,
-            charge: amount,
+            "car-registration": singleitem.carnumber,
+            charge: getAmount(),
         };
-        fetch("https://httpstat.us/200", {
+
+        const res = await fetch("https://httpstat.us/200", {
             method: "POST",
             headers: {
                 Accept: "application/json",
             },
             body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.code === 200) {
-                    setLoder(false);
-                    toast.success("Success! Your payment was successful!");
-                    dispatch(removeItems(singleitem as SingleCarProps));
-                    setExit(!exit);
-                }
-            })
-            .catch((error) => {
-                setLoder(false);
-                toast.error("Payment failed!");
-                setExit(!exit);
-            });
+        });
+
+        if (res.status === 200) {
+            dispatch(removeItems(singleitem));
+            toast.success("Payment Successful");
+        } else {
+            toast.error("Payment Failed");
+        }
+        setLoder(false);
+        handlePaymentModal();
     };
 
     const getAmount = () => {
@@ -174,23 +172,22 @@ export default function ParkingSpace() {
         const diffTime: number = Math.abs(date2 - date1);
         const diffHrs = Math.ceil(diffTime / (1000 * 60 * 60));
         if (!isNaN(diffHrs)) {
-            setAmount(10);
+            return 10;
         } else {
-            setAmount(diffHrs * 10);
+            return diffHrs * 10;
         }
-        console.log(diffHrs + " diffHrs");
     };
 
     // Check if user enters parking space or not
     useEffect(() => {
-        if (!spaces) {
+        if (!state.carregister.cardata.length) {
             toast.error(`Plese enter parking space first.`);
             return navigate("/")
-        };
-    }, [navigate, spaces]);
+        }
+    }, [navigate, state.carregister.cardata.length]);
 
     return (
-        <div data-testid="button">
+        <div>
             {loder ? (
                 <div className="loderbox">
                     <div className="loder">
@@ -275,42 +272,13 @@ export default function ParkingSpace() {
                                 </DialogActions>
                             </BootstrapDialog>
 
-                            <Dialog open={exit} onClose={() => setExit(!exit)}>
-                                <DialogTitle>Payment</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        For parking exit please pay below
-                                        mention amount for car number
-                                        <b>{singleitem!.carnumber}</b>.
-                                    </DialogContentText>
-                                    <TextField
-                                        id="standard-number"
-                                        label="Amount"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        inputProps={{ readOnly: true }}
-                                        variant="standard"
-                                        value={amount + " $"}
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button
-                                        onClick={() => setExit(!exit)}
-                                        variant="outlined"
-                                        color="error"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        onClick={() => payment()}
-                                        variant="contained"
-                                        color="success"
-                                    >
-                                        Pay
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
+                            <PaymentModal
+                                isOpen={isPaymentModalOpen}
+                                toggleModal={handlePaymentModal}
+                                car={singleitem}
+                                payment={payment}
+                                amount={getAmount()}
+                            />
                         </div>
                         <div className="cards">
                             {state.carregister.cardata.map(
@@ -329,8 +297,7 @@ export default function ParkingSpace() {
                                             <div
                                                 onClick={() => {
                                                     setSingleitem(items);
-                                                    setExit(!exit);
-                                                    getAmount();
+                                                    handlePaymentModal();
                                                 }}
                                                 key={index}
                                                 className="cardul"

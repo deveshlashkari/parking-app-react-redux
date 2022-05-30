@@ -68,9 +68,9 @@ const RegistrationReducer = (state = initialState, action: Action) => {
                                 available: true,
                                 cartiming: "",
                             };
+                        } else {
+                            return val;
                         }
-                    } else {
-                        return val;
                     }
                 }),
             };
