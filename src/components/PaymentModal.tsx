@@ -19,8 +19,7 @@ const PaymentModal: FC<PayProps> = ({ isOpen, toggleModal, car, amount, payment 
             <DialogContent>
                 <DialogContentText>
                     For parking exit please pay below
-                    mention amount for car number
-                    <b>{car.carnumber}</b>.
+                    mention amount for car number <b>{car.carnumber}</b>.
                 </DialogContentText>
                 <TextField
                     id="standard-number"
