@@ -46,10 +46,10 @@ describe("<ParkingSpace />", () => {
         expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
 
-        await waitForElementToBeRemoved(submitButton).then(() => {
+        await waitFor(() => {
             const toast = screen.getByText(/Successfuly Registerd./i);
             expect(toast).toBeInTheDocument();
-        })
+        }, { timeout: 4000 })
     });
 
     it("should pay the amount", async () => {

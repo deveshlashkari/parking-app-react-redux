@@ -69,8 +69,12 @@
 }
 
 .cards div {
+    width: 31%;
+}
+
+.cards div div {
     transition: all 0.3s ease-in;
-    width: 28%;
+    width: 90%;
     border-radius: 5px;
     padding: 40px 20px;
     text-align: center;
@@ -79,7 +83,7 @@
     margin: 10px;
 }
 
-.cards div:hover {
+.cards div div:hover {
     transform: scale(1.04);
 }
 

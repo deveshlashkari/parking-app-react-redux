@@ -36,6 +36,7 @@ export default function Home() {
                             value={space}
                             onChange={(e) => setSpace(e.target.value)}
                             placeholder="Enter your required parking space."
+                            id="parking-create-text-input"
                         />
                         <br />
                         <input
@@ -43,6 +44,7 @@ export default function Home() {
                             value="Submit"
                             onClick={(e) => validate(e)}
                             disabled={!space}
+                            id="parking-create-submit-button"
                         />
                     </Box>
                 </Box>
