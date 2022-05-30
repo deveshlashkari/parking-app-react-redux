@@ -15,12 +15,13 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useDispatch, useSelector } from "react-redux";
 import { addItems, removeItems } from "../store/actions/caraction";
 import { ToastContainer, toast } from "react-toastify";
-import DialogContentText from "@mui/material/DialogContentText";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CarRegisterProps } from "../store";
 import { SingleCarProps } from "../store/reducers/cartReducer";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PaymentModal from "../components/PaymentModal";
+import Cards from "../components/Cards";
+import DetailsModal from "../components/DetailsModal";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -63,7 +64,6 @@ const BootstrapDialogTitle: FC<BDTProps> = (props) => {
 
 export default function ParkingSpace() {
     const navigate = useNavigate();
-    const [newreg, setnewreg] = useState(true);
     const [open, setOpen] = useState(false);
     const [time, setTime] = useState(new Date());
     const state = useSelector((state) => state) as CarRegisterProps;
@@ -76,12 +76,11 @@ export default function ParkingSpace() {
     const [loder, setLoder] = useState(false);
 
     const handleClickOpen = () => {
-        setnewreg(!newreg);
-        setOpen(true);
+        setOpen(prev => !prev);
     };
 
     const handlePaymentModal = () => {
-        setPaymentModalOpen(!isPaymentModalOpen);
+        setPaymentModalOpen(prev => !prev);
     }
 
     // Return total free spaces
@@ -92,55 +91,6 @@ export default function ParkingSpace() {
             ).length;
     }
 
-    const getRandomId = () => Math.floor(Math.random() * getFreeSpaces());
-
-    const getFreeSpaceId = () => {
-        const freeSpace = state.carregister.cardata.filter(
-            (val) => val.available === true
-        );
-        return freeSpace[getRandomId()].bookingid;
-    }
-
-    const regsubmit = () => {
-        if (carnumber !== "") {
-            bookslot();
-            setOpen(!open);
-        } else {
-            toast.error("Please enter car number.");
-        }
-    };
-
-    const bookslot = () => {
-        let bookedspace = state.carregister.cardata.filter(
-            (val) => val.available === false
-        ).length;
-
-        if (bookedspace === state.carregister.cardata.length) {
-            toast.error("All spaces are booked. Please wait for some time.");
-        } else {
-            let items = state.carregister.cardata;
-            let matches = false;
-            for (let i = 0; i < items.length; i++) {
-                if (items[i].carnumber === carnumber) {
-                    matches = true;
-                    break;
-                }
-            }
-            if (matches === false) {
-                let carDetails = {
-                    carnumber: carnumber,
-                    bookingid: getFreeSpaceId(),
-                    available: false,
-                    cartiming: time,
-                };
-                dispatch(addItems(carDetails));
-                toast.success("Successfuly Registerd.");
-            } else {
-                toast.error("Already Registerd.");
-            }
-        }
-    };
-
     const payment = async () => {
         setLoder(true);
         let data = {
@@ -148,22 +98,27 @@ export default function ParkingSpace() {
             charge: getAmount(),
         };
 
-        const res = await fetch("https://httpstat.us/200", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-            },
-            body: JSON.stringify(data),
-        });
+        try {
+            const res = await fetch("https://httpstat.us/200", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(data),
+            });
 
-        if (res.status === 200) {
-            dispatch(removeItems(singleitem));
-            toast.success("Payment Successful");
-        } else {
-            toast.error("Payment Failed");
+            if (res.status === 200) {
+                dispatch(removeItems(singleitem));
+                toast.success("Payment Successful");
+            } else {
+                throw new Error("Payment Failed");
+            }
+        } catch (err: any) {
+            toast.error(err.message);
+        } finally {
+            setLoder(false);
+            handlePaymentModal();
         }
-        setLoder(false);
-        handlePaymentModal();
     };
 
     const getAmount = () => {
@@ -203,11 +158,10 @@ export default function ParkingSpace() {
                             <Button
                                 data-testid="button1"
                                 className="dash"
-                                variant={
-                                    newreg === true ? "contained" : "outlined"
-                                }
+                                variant="contained"
                                 color="success"
                                 onClick={handleClickOpen}
+                                disabled={getFreeSpaces() === 0}
                             >
                                 Book Your Space +
                             </Button>
@@ -227,50 +181,8 @@ export default function ParkingSpace() {
                                 Total Spaces :{" "}
                                 {state.carregister.cardata.length}
                             </Button>
-                            <BootstrapDialog
-                                onClose={() => setOpen(!open)}
-                                aria-labelledby="customized-dialog-title"
-                                open={open}
-                            >
-                                <BootstrapDialogTitle
-                                    id="customized-dialog-title"
-                                    onClose={() => setOpen(!open)}
-                                >
-                                    New Car Registration
-                                </BootstrapDialogTitle>
-                                <DialogContent dividers>
-                                    <LocalizationProvider
-                                        dateAdapter={AdapterDateFns}
-                                    >
-                                        <DateTimePicker
-                                            renderInput={(props) => (
-                                                <TextField {...props} />
-                                            )}
-                                            label="Car Arrival Time"
-                                            value={time}
-                                            onChange={(newValue) => {
-                                                setTime(newValue as Date);
-                                            }}
-                                        />
-                                    </LocalizationProvider>
-                                    <TextField
-                                        required
-                                        id="outlined-required"
-                                        label="Car Number"
-                                        onChange={(e) =>
-                                            setCarNumber(e.target.value)
-                                        }
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button
-                                        autoFocus
-                                        onClick={() => regsubmit()}
-                                    >
-                                        Submit
-                                    </Button>
-                                </DialogActions>
-                            </BootstrapDialog>
+
+                            <DetailsModal isOpen={open} onClose={handleClickOpen} />
 
                             <PaymentModal
                                 isOpen={isPaymentModalOpen}
@@ -280,36 +192,11 @@ export default function ParkingSpace() {
                                 amount={getAmount()}
                             />
                         </div>
-                        <div className="cards">
-                            {state.carregister.cardata.map(
-                                (items, index: number) => {
-                                    if (items.available === true) {
-                                        return (
-                                            <div key={index} className="card">
-                                                <h3>PSB - {items.bookingid}</h3>
-                                                <span>
-                                                    Currently Available.
-                                                </span>
-                                            </div>
-                                        );
-                                    } else {
-                                        return (
-                                            <div
-                                                onClick={() => {
-                                                    setSingleitem(items);
-                                                    handlePaymentModal();
-                                                }}
-                                                key={index}
-                                                className="cardul"
-                                            >
-                                                <h3>PSB - {items.bookingid}</h3>
-                                                <span>Booked.</span>
-                                            </div>
-                                        );
-                                    }
-                                }
-                            )}
-                        </div>
+                        <Cards
+                            cardata={state.carregister.cardata}
+                            handlePaymentModal={handlePaymentModal}
+                            setSingleitem={setSingleitem}
+                        />
                     </div>
                 </>
             )}
