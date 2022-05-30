@@ -12,9 +12,7 @@ export default function Home() {
 
     const validate = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault();
-        if (space === "") {
-            toast.error(`Plese enter parking space.`);
-        } else if (Number(space) > state.carregister.cardata.length) {
+        if (Number(space) > state.carregister.cardata.length) {
             toast.error(
                 `Toatal parking spaces ${state.carregister.cardata.length}. Please enter the valid space.`
             );
