@@ -1,6 +1,5 @@
 import configureStore from "redux-mock-store";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
 import { MockState } from "../../../pages/__test__/Home.test";
 import DetailsModal from "../../DetailsModal";
 import { Provider } from "react-redux";

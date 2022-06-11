@@ -1,7 +1,7 @@
-import { SingleCarProps } from "../store/reducers/cartReducer";
+import { Slot } from "../context/SlotContext";
 
 // return the total amount based on total hours
-export const calculateAmount = (singleitem: SingleCarProps) => {
+export const calculateAmount = (singleitem: Slot) => {
     const date1 = new Date(singleitem!.cartiming);
     const date2 = new Date();
 
@@ -18,7 +18,7 @@ export const calculateAmount = (singleitem: SingleCarProps) => {
     return 10;
 };
 
-export const calculateTime = (singleitem: SingleCarProps) => {
+export const calculateTime = (singleitem: Slot) => {
     const date1 = new Date(singleitem!.cartiming);
     const date2 = new Date();
 

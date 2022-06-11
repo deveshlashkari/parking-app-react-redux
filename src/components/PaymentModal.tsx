@@ -1,13 +1,12 @@
 import { FC } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from "@mui/material";
-
-import { SingleCarProps } from "../store/reducers/cartReducer";
 import { calculateTime, calculateAmount } from "../util/calculate";
+import { Slot } from "../context/SlotContext";
 
 interface PayProps {
     isOpen: boolean;
     toggleModal: () => void;
-    car: SingleCarProps;
+    car: Slot;
     payment: () => void;
 }
 

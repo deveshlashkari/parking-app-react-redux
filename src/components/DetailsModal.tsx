@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -12,10 +12,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { CarRegisterProps } from "../store";
-import { useDispatch } from "react-redux";
-import { addItems } from "../store/actions/caraction";
+import SlotContext from "../context/SlotContext";
 
 interface BDTProps {
     children: React.ReactNode;
@@ -62,10 +59,9 @@ const BootstrapDialogTitle: FC<BDTProps> = (props) => {
 };
 
 const DetailsModal: FC<DMProps> = ({ isOpen, onClose, }) => {
-    const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState<Date>(new Date());
     const [carnumber, setCarNumber] = useState("");
-    const state = useSelector((state) => state) as CarRegisterProps;
-    const dispatch = useDispatch();
+    const context = useContext(SlotContext);
 
     const handleClose = () => {
         setCarNumber("");
@@ -80,25 +76,8 @@ const DetailsModal: FC<DMProps> = ({ isOpen, onClose, }) => {
         }
     };
 
-    // Return total free spaces
-    const getFreeSpaces = () => {
-        return state.carregister.cardata.length -
-            state.carregister.cardata.filter(
-                (val) => val.available === false
-            ).length;
-    }
-
-    const getRandomId = () => Math.floor(Math.random() * getFreeSpaces());
-
-    const getFreeSpaceId = () => {
-        const freeSpace = state.carregister.cardata.filter(
-            (val) => val.available === true
-        );
-        return freeSpace[getRandomId()].bookingid;
-    }
-
     const bookslot = () => {
-        var isMatch = state.carregister.cardata.some((car) => {
+        var isMatch = context.slots.some((car) => {
             return car.carnumber === carnumber;
         });
 
@@ -107,13 +86,7 @@ const DetailsModal: FC<DMProps> = ({ isOpen, onClose, }) => {
             return;
         }
 
-        let carDetails = {
-            carnumber: carnumber,
-            bookingid: getFreeSpaceId(),
-            available: false,
-            cartiming: time,
-        };
-        dispatch(addItems(carDetails));
+        context.addToSlot(carnumber, time);
         toast.success("Successfuly Registerd.");
         handleClose();
     };

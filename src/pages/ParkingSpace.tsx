@@ -1,31 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "../components/common/Header";
 import Button from "@mui/material/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { removeItems } from "../store/actions/caraction";
 import { ToastContainer, toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
-import { CarRegisterProps } from "../store";
-import { SingleCarProps } from "../store/reducers/cartReducer";
 import { useNavigate } from "react-router-dom";
 import PaymentModal from "../components/PaymentModal";
 import Cards from "../components/Cards";
 import DetailsModal from "../components/DetailsModal";
 import { Box, Typography } from "@mui/material";
-import { makePayment, calculateAmount } from "../util";
-import { calculateTime } from "../util/calculate";
+import { makePayment } from "../util";
+import SlotContext, { Slot } from "../context/SlotContext";
 
 
 export default function ParkingSpace() {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const state = useSelector((state) => state) as CarRegisterProps;
-    const dispatch = useDispatch();
     const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
-    const [singleitem, setSingleitem] = useState<SingleCarProps>(
-        { carnumber: "", bookingid: "01", available: true, cartiming: "" }
+    const [singleitem, setSingleitem] = useState<Slot>(
+        { carnumber: "", bookingid: 1, available: true, cartiming: "" }
     );
     const [loder, setLoder] = useState(false);
+    const context = useContext(SlotContext);
 
     // toggle car registration modal
     const handleClickOpen = () => {
@@ -37,21 +32,13 @@ export default function ParkingSpace() {
         setPaymentModalOpen(prev => !prev);
     }
 
-    // Return total free spaces
-    const getFreeSpaces = () => {
-        return state.carregister.cardata.length -
-            state.carregister.cardata.filter(
-                (val) => val.available === false
-            ).length;
-    }
-
     // handle payment
     const payment = async () => {
         setLoder(true);
 
         const res = await makePayment(singleitem);
         if (res) {
-            dispatch(removeItems(singleitem));
+            context.removeFromSlot(singleitem.bookingid);
             toast.success("Payment Successful");
         } else {
             toast.error("Payment Failed");
@@ -63,11 +50,11 @@ export default function ParkingSpace() {
 
     // Check if user enters parking space or not
     useEffect(() => {
-        if (!state.carregister.cardata.length) {
+        if (!context.totalSlots) {
             toast.error(`Plese enter parking space first.`);
             return navigate("/")
         }
-    }, [navigate, state.carregister.cardata.length]);
+    }, [navigate]);
 
     return (
         <Box>
@@ -89,7 +76,7 @@ export default function ParkingSpace() {
                                 variant="contained"
                                 color="success"
                                 onClick={handleClickOpen}
-                                disabled={getFreeSpaces() === 0}
+                                disabled={context.freeSlots === 0}
                             >
                                 Book Your Space +
                             </Button>
@@ -98,7 +85,7 @@ export default function ParkingSpace() {
                                 variant="contained"
                                 color="success"
                             >
-                                Total Available Spaces : {getFreeSpaces()}
+                                Total Available Spaces : {context.freeSlots}
                             </Button>
 
                             <Button
@@ -106,8 +93,8 @@ export default function ParkingSpace() {
                                 variant="contained"
                                 color="success"
                             >
-                                Total Spaces :{" "}
-                                {state.carregister.cardata.length}
+                                Total Spaces :
+                                {context.totalSlots}
                             </Button>
 
                             {open &&
@@ -124,7 +111,7 @@ export default function ParkingSpace() {
                             )}
                         </Box>
                         <Cards
-                            cardata={state.carregister.cardata}
+                            cardata={context.slots}
                             handlePaymentModal={handlePaymentModal}
                             setSingleitem={setSingleitem}
                         />

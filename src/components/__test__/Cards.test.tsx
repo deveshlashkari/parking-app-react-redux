@@ -3,18 +3,17 @@ import Cards, { Card } from "../Cards";
 
 const MockData1 = {
     carnumber: "Raj-101",
-    bookingid: "01",
+    bookingid: 1,
     available: true,
     cartiming: "10:30",
 }
 
 const MockData2 = {
     carnumber: "Meta-102",
-    bookingid: "02",
+    bookingid: 2,
     available: false,
     cartiming: "11:30",
 }
-
 
 describe("<Card />", () => {
     it("should render the Card Component", () => {
