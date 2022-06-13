@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import { ToastContainer, toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { setItems } from "../store/actions/caraction";
 import { Box, Typography } from "@mui/material";
+import SlotContext from "../context/SlotContext";
 
 export default function Home() {
     const [space, setSpace] = useState("");
+    const context = useContext(SlotContext);
     let navigate = useNavigate();
-    const dispatch = useDispatch();
 
     // validate user input 
     const validate = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
@@ -19,7 +18,7 @@ export default function Home() {
             return;
         }
 
-        dispatch(setItems(Number(space)));
+        context.createSlots(Number(space));
         navigate("parkingspace", { state: space });
     };
 

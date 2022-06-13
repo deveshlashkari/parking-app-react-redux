@@ -1,27 +1,50 @@
-import configureStore from "redux-mock-store";
 import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import { BrowserRouter, Router } from "react-router-dom";
 
 import ParkingSpace from "../ParkingSpace";
-import { MockState } from "./Home.test";
-import { Provider } from "react-redux";
 import { createMemoryHistory } from "history";
+import SlotContext, { SlotProvider } from "../../context/SlotContext";
+
+export const MockState = {
+    slots: [
+        {
+            carnumber: "WB-101",
+            bookingid: 1,
+            available: false,
+            cartiming: "",
+        },
+        {
+            carnumber: "",
+            bookingid: 2,
+            available: true,
+            cartiming: "",
+        },
+        {
+            carnumber: "",
+            bookingid: 3,
+            available: true,
+            cartiming: "",
+        },
+    ],
+};
 
 const MocakParkingSpace = () => {
-    const initialState = MockState;
-    const mockStore = configureStore();
-    let store;
-
-    store = mockStore(initialState);
-
     const history = createMemoryHistory();
     history.push("/parkingspace", 2);
+
     return (
-        <Provider store={store}>
+        <SlotContext.Provider value={{
+            addToSlot: jest.fn(),
+            removeFromSlot: jest.fn(),
+            slots: MockState.slots,
+            createSlots: jest.fn(),
+            totalSlots: 4,
+            freeSlots: 4,
+        }}>
             <Router location={history.location} navigator={history}>
                 <ParkingSpace />
             </Router>
-        </Provider>
+        </SlotContext.Provider>
     )
 };
 
@@ -73,24 +96,14 @@ describe("<ParkingSpace />", () => {
     });
 
     it("should redirect to / page if no parking space is allocated", async () => {
-        const initialState = {
-            carregister: {
-                cardata: []
-            }
-        };
-        const mockStore = configureStore();
-        let store;
-
-        store = mockStore(initialState);
-
         const history = createMemoryHistory();
         history.push("/parkingspace");
         render(
-            <Provider store={store}>
+            <SlotProvider>
                 <Router location={history.location} navigator={history}>
                     <ParkingSpace />
                 </Router>
-            </Provider>
+            </SlotProvider>
         )
 
         await waitFor(() => {

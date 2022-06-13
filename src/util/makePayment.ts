@@ -1,7 +1,7 @@
-import { SingleCarProps } from "../store/reducers/cartReducer";
 import { calculateAmount } from ".";
+import { Slot } from "../context/SlotContext";
 
-export const makePayment = async (singleitem: SingleCarProps) => {
+export const makePayment = async (singleitem: Slot) => {
     let data = {
         "car-registration": singleitem.carnumber,
         charge: calculateAmount(singleitem),

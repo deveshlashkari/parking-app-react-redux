@@ -1,16 +1,16 @@
 import { Box, Typography } from "@mui/material";
 import { FC } from "react";
-import { CarProps, SingleCarProps } from "../store/reducers/cartReducer";
+import { Slot } from "../context/SlotContext";
 
 interface CardsProps {
-    cardata: CarProps["cardata"];
-    setSingleitem: (car: SingleCarProps) => void;
+    cardata: Slot[];
+    setSingleitem: (car: Slot) => void;
     handlePaymentModal: () => void;
 }
 
 interface CardProps {
-    car: SingleCarProps;
-    setSingleitem: (car: SingleCarProps) => void;
+    car: Slot;
+    setSingleitem: (car: Slot) => void;
     handlePaymentModal: () => void;
 }
 
