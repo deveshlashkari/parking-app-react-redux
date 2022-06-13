@@ -49,15 +49,3 @@ describe("<Card />", () => {
         fireEvent.click(card);
     });
 });
-
-describe('<Cards />', () => {
-    it("should render the cards", () => {
-        render(
-            <Cards
-                cardata={[MockData1, MockData2]}
-                setSingleitem={() => { }}
-                handlePaymentModal={() => { }}
-            />
-        );
-    })
-})

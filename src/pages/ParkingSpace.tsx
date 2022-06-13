@@ -52,9 +52,9 @@ export default function ParkingSpace() {
     useEffect(() => {
         if (!context.totalSlots) {
             toast.error(`Plese enter parking space first.`);
-            return navigate("/")
+            return navigate("/");
         }
-    }, [navigate]);
+    }, [navigate, context.totalSlots]);
 
     return (
         <Box>

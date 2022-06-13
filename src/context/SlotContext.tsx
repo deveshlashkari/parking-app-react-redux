@@ -1,4 +1,4 @@
-import React, { createContext, FC, useEffect, useState } from "react";
+import React, { createContext, FC, useCallback, useEffect, useState } from "react";
 
 const createEmptySlots = (TOTAL_SPACES: number): Slot[] => {
     const cardata: Slot[] = Array(TOTAL_SPACES)
@@ -52,11 +52,12 @@ export const SlotProvider: FC<SlotProviderProps> = (props) => {
     const [slots, setSlots] = useState<Slot[]>(createEmptySlots(0));
 
     // Return total free spaces
-    const countFreeSlots = () => {
+
+    const countFreeSlots = useCallback(() => {
         const freeSlots = slots.filter(slot => slot.available).length;
         setFreeSlots(freeSlots);
         return freeSlots;
-    }
+    }, [slots]);
 
     // return a random free slots Id
     const getRandomId = () => Math.floor(Math.random() * countFreeSlots());
@@ -97,7 +98,7 @@ export const SlotProvider: FC<SlotProviderProps> = (props) => {
 
     useEffect(() => {
         countFreeSlots();
-    }, [slots]);
+    }, [slots, countFreeSlots]);
 
     return (
         <SlotContext.Provider value={{
