@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import Cards, { Card } from "../Cards";
+import { Card } from "../Cards";
 
 const MockData1 = {
     carnumber: "Raj-101",
@@ -34,7 +34,6 @@ describe("<Card />", () => {
         );
         const card = screen.getByText(/Currently Available/i);
         expect(card).toBeInTheDocument();
-        // expect(card).toBeDisabled();
     });
 
     it("should be clickable if the car is available", () => {

@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 
 import Header from "../Header";
 
-
 describe("<Header />", () => {
     it("should render the Home button", () => {
         render(
